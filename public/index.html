@@ -4916,6 +4916,7 @@ footer{padding:22px 4vw;font-size:12px;background:var(--dark);color:#8b8b88;disp
 
     <!-- Photographer Animation Video -->
     <video id="photographer-video" class="photographer-video" playsinline muted preload="auto" poster="frames/frame_240.jpg">
+      <source src="finalize.mp4" type="video/mp4">
       <source src="public/finalize.mp4" type="video/mp4">
     </video>
     <canvas id="camera-canvas" class="camera-canvas" aria-hidden="true"></canvas>
@@ -5156,7 +5157,7 @@ footer{padding:22px 4vw;font-size:12px;background:var(--dark);color:#8b8b88;disp
             <div class="deck-stack-thickness-bottom"></div>
             <!-- Permanent Kevin King playing card back -->
             <div class="card-face card-back" style="position:absolute; inset:0; border-radius:16px;">
-              <img class="card-back-art" src="public/story_deck/kevin_king_card.webp" alt="King Kevin Samuel" />
+              <img class="card-back-art" src="story_deck/kevin_king_card.webp" onerror="if(!this.dataset.tried){this.dataset.tried='1';this.src='public/story_deck/kevin_king_card.webp';}" alt="King Kevin Samuel" />
               <div class="card-back-gold-rim"></div>
             </div>
           </div>
@@ -5176,7 +5177,7 @@ footer{padding:22px 4vw;font-size:12px;background:var(--dark);color:#8b8b88;disp
             <div class="deck-stack-thickness-bottom"></div>
             <!-- Permanent Kevin King playing card back -->
             <div class="card-face card-back" style="position:absolute; inset:0; border-radius:16px;">
-              <img class="card-back-art" src="public/story_deck/kevin_king_card.webp" alt="King Kevin Samuel" />
+              <img class="card-back-art" src="story_deck/kevin_king_card.webp" onerror="if(!this.dataset.tried){this.dataset.tried='1';this.src='public/story_deck/kevin_king_card.webp';}" alt="King Kevin Samuel" />
               <div class="card-back-gold-rim"></div>
             </div>
           </div>
@@ -5199,7 +5200,7 @@ footer{padding:22px 4vw;font-size:12px;background:var(--dark);color:#8b8b88;disp
 
               <!-- OUTER BACK: Untouched Kevin King playing card -->
               <div class="card-face card-back">
-                <img class="card-back-art" src="public/story_deck/kevin_king_card.webp" alt="King Kevin Samuel" />
+                <img class="card-back-art" src="story_deck/kevin_king_card.webp" onerror="if(!this.dataset.tried){this.dataset.tried='1';this.src='public/story_deck/kevin_king_card.webp';}" alt="King Kevin Samuel" />
                 <div class="card-back-gold-rim"></div>
               </div>
 
@@ -5284,7 +5285,7 @@ footer{padding:22px 4vw;font-size:12px;background:var(--dark);color:#8b8b88;disp
 
               <!-- OUTER BACK: Untouched Kevin King playing card -->
               <div class="card-face card-back">
-                <img class="card-back-art" src="public/story_deck/kevin_king_card.webp" alt="King Kevin Samuel" />
+                <img class="card-back-art" src="story_deck/kevin_king_card.webp" onerror="if(!this.dataset.tried){this.dataset.tried='1';this.src='public/story_deck/kevin_king_card.webp';}" alt="King Kevin Samuel" />
                 <div class="card-back-gold-rim"></div>
               </div>
 
@@ -5367,7 +5368,7 @@ footer{padding:22px 4vw;font-size:12px;background:var(--dark);color:#8b8b88;disp
 
               <!-- OUTER BACK: Untouched Kevin King playing card -->
               <div class="card-face card-back">
-                <img class="card-back-art" src="public/story_deck/kevin_king_card.webp" alt="King Kevin Samuel" />
+                <img class="card-back-art" src="story_deck/kevin_king_card.webp" onerror="if(!this.dataset.tried){this.dataset.tried='1';this.src='public/story_deck/kevin_king_card.webp';}" alt="King Kevin Samuel" />
                 <div class="card-back-gold-rim"></div>
               </div>
 
@@ -6685,6 +6686,14 @@ fonts.catch(function(){}).then(function(){return document.fonts?document.fonts.r
     function playOriginalVideo() {
       if (videoStarted) return;
       videoStarted = true;
+      photogVideo.onerror = function() {
+        if (!photogVideo.dataset.retried) {
+          photogVideo.dataset.retried = '1';
+          photogVideo.src = (photogVideo.currentSrc && photogVideo.currentSrc.includes('public/')) ? 'finalize.mp4' : 'public/finalize.mp4';
+          photogVideo.load();
+          photogVideo.play().catch(function(){});
+        }
+      };
       flashFiredOnVideo = false;
       photogVideo.currentTime = 0;
       const playPromise = photogVideo.play();
@@ -7844,15 +7853,7 @@ fonts.catch(function(){}).then(function(){return document.fonts?document.fonts.r
   const hudInfoPanel = document.getElementById('filmInfoPanel');
 
   function resolveVideoSrc(rawPath) {
-    const isInsidePublic = window.location.pathname.includes('/public/') || 
-                           window.location.pathname.endsWith('Kevin Samuel Hero section.html');
-    let path = rawPath;
-    if (isInsidePublic && path.startsWith('public/')) {
-      path = path.replace('public/', '');
-    } else if (!isInsidePublic && !path.startsWith('public/') && !path.startsWith('http') && !path.startsWith('data:')) {
-      path = 'public/' + path;
-    }
-    return path;
+    return rawPath || '1.mp4';
   }
 
   function openVideoModal(idx) {
@@ -7870,6 +7871,19 @@ fonts.catch(function(){}).then(function(){return document.fonts?document.fonts.r
 
     const videoSrc = resolveVideoSrc(v.file);
     if (modalVideo) {
+      modalVideo.onerror = function() {
+        if (!modalVideo.dataset.retried) {
+          modalVideo.dataset.retried = '1';
+          const cur = modalVideo.currentSrc || modalVideo.src || '';
+          if (cur.includes('public/')) {
+            modalVideo.src = (v && v.file) ? v.file.replace('public/', '') : '1.mp4';
+          } else {
+            modalVideo.src = 'public/' + ((v && v.file) ? v.file : '1.mp4');
+          }
+          modalVideo.load();
+          modalVideo.play().catch(function(){});
+        }
+      };
       modalVideo.src = videoSrc;
       modalVideo.currentTime = 0;
       modalVideo.muted = false; // Unmute for full cinema audio experience
