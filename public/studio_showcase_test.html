@@ -1,0 +1,1175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kevin Samuel // Studio Showcase</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      background: #030406;
+      color: #ffffff;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      overflow-x: hidden;
+      scroll-behavior: auto;
+    }
+
+    /* Outer Track Container (550vh for smooth scrub) */
+    .studio-showcase-section {
+      position: relative;
+      width: 100%;
+      height: 550vh;
+      background: #000000;
+    }
+
+    /* Pinned Sticky Stage Viewport */
+    .studio-stage-sticky {
+      position: sticky;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      background: #000000;
+      perspective: 1200px;
+    }
+
+    /* Main Studio Canvas / Graphic Container */
+    .studio-canvas-container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    /* 16:9 Aspect Ratio Frame matching 1024x576 studio reference */
+    .studio-frame-16-9 {
+      position: relative;
+      width: 100vw;
+      height: 56.25vw; /* 16:9 */
+      min-height: 100vh;
+      min-width: 177.78vh; /* 16:9 */
+      overflow: hidden;
+      background: #040508;
+      transform-origin: center center;
+      will-change: transform, opacity, filter;
+    }
+
+    /* Base Clean Studio Environment Image */
+    .studio-bg-img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center center;
+      pointer-events: none;
+      user-select: none;
+      will-change: transform, opacity, filter;
+    }
+
+    /* Dark Monochromatic Atmosphere Gradients */
+    .studio-darkness-shroud {
+      position: absolute;
+      inset: 0;
+      background: #000000;
+      pointer-events: none;
+      z-index: 5;
+      transition: opacity 0.1s linear;
+      will-change: opacity;
+    }
+
+    .studio-lighting-vignette {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 6;
+      background: radial-gradient(circle at 50% 55%, rgba(0,0,0,0) 25%, rgba(2,3,6,0.65) 75%, rgba(0,0,0,0.92) 100%);
+    }
+
+    /* HUD Topbar */
+    .studio-hud-topbar {
+      position: absolute;
+      top: 24px;
+      left: 36px;
+      right: 36px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 100;
+      pointer-events: none;
+    }
+
+    .studio-hud-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 12px;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      font-weight: 700;
+      color: rgba(255,255,255,0.85);
+    }
+
+    .studio-hud-rec-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #ffffff;
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.9);
+      animation: pulse-dot 2s infinite ease-in-out;
+    }
+
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.3; transform: scale(0.85); }
+    }
+
+    .studio-hud-status {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      font-family: 'Space Grotesk', monospace;
+      font-size: 11px;
+      letter-spacing: 2px;
+      color: rgba(255,255,255,0.6);
+      text-transform: uppercase;
+    }
+
+    .studio-hud-pill {
+      padding: 5px 14px;
+      background: rgba(10, 14, 20, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 20px;
+      color: #ffffff;
+      backdrop-filter: blur(8px);
+      box-shadow: 0 0 15px rgba(255, 255, 255, 0.08);
+      font-weight: 700;
+    }
+
+    /* ========================================================
+       STAGE 01: INTRO TITLE OVERLAY
+       ======================================================== */
+    .studio-intro-overlay {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 50;
+      pointer-events: none;
+      text-align: center;
+      padding: 0 20px;
+      will-change: opacity, transform;
+    }
+
+    .studio-intro-badge {
+      display: inline-block;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.9);
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      padding: 6px 18px;
+      border-radius: 4px;
+      margin-bottom: 20px;
+      backdrop-filter: blur(8px);
+    }
+
+    .studio-intro-title {
+      font-family: 'Inter', sans-serif;
+      font-weight: 900;
+      font-size: clamp(34px, 5.5vw, 76px);
+      letter-spacing: 3px;
+      line-height: 1.05;
+      text-transform: uppercase;
+      color: #ffffff;
+      text-shadow: 0 10px 40px rgba(0,0,0,0.95);
+      margin-bottom: 14px;
+    }
+
+    .studio-intro-sub {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(12px, 1.6vw, 18px);
+      font-weight: 600;
+      letter-spacing: 6px;
+      color: rgba(255, 255, 255, 0.65);
+      text-transform: uppercase;
+      margin-bottom: 30px;
+    }
+
+    .studio-scroll-cue {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      font-size: 10px;
+      letter-spacing: 3px;
+      color: rgba(255,255,255,0.7);
+      text-transform: uppercase;
+      font-weight: 700;
+    }
+
+    .studio-mouse-icon {
+      width: 20px;
+      height: 32px;
+      border: 2px solid rgba(255,255,255,0.5);
+      border-radius: 10px;
+      position: relative;
+    }
+
+    .studio-mouse-wheel {
+      width: 3px;
+      height: 6px;
+      background: #ffffff;
+      border-radius: 2px;
+      position: absolute;
+      top: 5px;
+      left: 50%;
+      transform: translateX(-50%);
+      animation: mouse-wheel 1.8s infinite ease-in-out;
+    }
+
+    @keyframes mouse-wheel {
+      0% { transform: translate(-50%, 0); opacity: 1; }
+      100% { transform: translate(-50%, 12px); opacity: 0; }
+    }
+
+    /* ========================================================
+       STAGE 02: MODEL WORKING MICRO-ANIMATIONS
+       ======================================================== */
+    /* Container precisely aligned with MODEL seated in chair */
+    .model-interaction-anchor {
+      position: absolute;
+      left: 38.08%;
+      top: 48.61%;
+      width: 23.44%;
+      height: 46.00%;
+      z-index: 15;
+      pointer-events: none;
+      transform-origin: center bottom;
+      will-change: transform;
+    }
+
+    /* Subtle Head Anchor for head rotation */
+    .model-head-anchor {
+      position: absolute;
+      left: 36.5%;
+      top: 0%;
+      width: 27%;
+      height: 28%;
+      transform-origin: center 85%;
+      will-change: transform;
+      transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+
+    /* Subtle typing glow at keyboard */
+    .model-keyboard-glow {
+      position: absolute;
+      left: 20%;
+      bottom: 2%;
+      width: 60%;
+      height: 15%;
+      background: radial-gradient(ellipse at center, rgba(255,255,255,0.18) 0%, rgba(0,0,0,0) 70%);
+      opacity: 0;
+      mix-blend-mode: screen;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .model-keyboard-glow.active {
+      opacity: 0.8;
+      animation: key-pulse 0.4s infinite alternate ease-in-out;
+    }
+
+    @keyframes key-pulse {
+      0% { transform: scale(0.98); opacity: 0.6; }
+      100% { transform: scale(1.04); opacity: 0.95; }
+    }
+
+    /* ========================================================
+       STAGE 03: CAMERA EQUIPMENT REVEAL (MIDDLE-LEFT DISPLAY WALL)
+       ======================================================== */
+    /* ========================================================
+       STAGE 03: CAMERA DISASSEMBLY & REASSEMBLY ANIMATION
+       ======================================================== */
+    .camera-equipment-layer {
+      position: absolute;
+      left: 12.0%;
+      top: 10.0%;
+      width: 66.0%;
+      height: 52.0%;
+      z-index: 25;
+      pointer-events: none;
+      display: flex;
+      align-items: center;
+      opacity: 0;
+      transform: translateZ(0) scale(0.96);
+      transition: opacity 0.4s ease;
+      will-change: opacity, transform;
+      perspective: 1200px;
+    }
+
+    .camera-equipment-layer.active {
+      opacity: 1;
+      transform: translateZ(20px) scale(1);
+    }
+
+    /* 3D Camera Stage containing assembled & exploded rigs */
+    .camera-stage-3d {
+      position: absolute;
+      left: 32%;
+      top: 5%;
+      width: 68%;
+      height: 90%;
+      perspective: 1000px;
+      transform-style: preserve-3d;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Assembled complete camera wrapper */
+    .cam-assembled-wrap {
+      position: absolute;
+      left: 10%;
+      top: 12%;
+      width: 48%;
+      height: 76%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 0.25s ease;
+      will-change: opacity, transform;
+      z-index: 5;
+    }
+
+    .cam-assembled-img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      filter: drop-shadow(0 20px 45px rgba(0, 0, 0, 0.95));
+    }
+
+    /* Exploded camera components rig */
+    .cam-exploded-rig {
+      position: absolute;
+      inset: 0;
+      transform-style: preserve-3d;
+      will-change: transform, opacity;
+      transition: opacity 0.2s ease;
+    }
+
+    .cam-comp {
+      position: absolute;
+      object-fit: contain;
+      will-change: transform, opacity;
+      filter: drop-shadow(0 15px 35px rgba(0, 0, 0, 0.9));
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+    }
+
+    /* Component base positions relative to rig center */
+    .cam-comp-body {
+      left: 28%;
+      top: 12%;
+      width: 25%;
+      height: 76%;
+      z-index: 10;
+    }
+
+    .cam-comp-lens-optics {
+      left: 17%;
+      top: 18%;
+      width: 14%;
+      height: 64%;
+      z-index: 12;
+    }
+
+    .cam-comp-lens-front {
+      left: 7%;
+      top: 16%;
+      width: 12%;
+      height: 68%;
+      z-index: 14;
+    }
+
+    .cam-comp-sensor {
+      left: 52%;
+      top: 19%;
+      width: 10%;
+      height: 62%;
+      z-index: 8;
+    }
+
+    .cam-comp-mainboard {
+      left: 60%;
+      top: 19%;
+      width: 9%;
+      height: 62%;
+      z-index: 7;
+    }
+
+    .cam-comp-electronics {
+      left: 68%;
+      top: 19%;
+      width: 8%;
+      height: 62%;
+      z-index: 6;
+    }
+
+    .cam-comp-rear {
+      left: 74%;
+      top: 19%;
+      width: 9%;
+      height: 62%;
+      z-index: 5;
+    }
+
+    /* Camera Status Indicator pill */
+    .cam-state-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: 'Space Grotesk', monospace;
+      font-size: 9.5px;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      padding: 3px 10px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      color: #ffffff;
+      margin-bottom: 4px;
+      width: fit-content;
+    }
+
+    /* Text Block for Camera on Left Wall */
+    .camera-spec-callout {
+      position: absolute;
+      left: 0%;
+      top: 14%;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      z-index: 30;
+      text-shadow: 0 4px 20px rgba(0,0,0,0.9);
+      max-width: 32%;
+    }
+
+    .cam-brand-tag {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.7);
+    }
+
+    .cam-model-title {
+      font-family: 'Inter', sans-serif;
+      font-size: clamp(22px, 2.4vw, 36px);
+      font-weight: 900;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #ffffff;
+      line-height: 1;
+    }
+
+    .cam-tagline {
+      font-size: 11.5px;
+      color: rgba(255,255,255,0.55);
+      letter-spacing: 1px;
+      margin-bottom: 4px;
+    }
+
+    .cam-features-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .cam-feat-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-family: 'Space Grotesk', monospace;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1.2px;
+      color: rgba(255,255,255,0.85);
+      text-transform: uppercase;
+    }
+
+    .cam-feat-dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: #ffffff;
+      box-shadow: 0 0 6px #ffffff;
+    }
+
+    /* ========================================================
+       STAGE 04: SOFTWARE SHOWCASE (RIGHT DISPLAY WALL)
+       ======================================================== */
+    .software-showcase-layer {
+      position: absolute;
+      left: 69.5%;
+      top: 19.5%;
+      width: 14.2%;
+      height: 35.0%;
+      z-index: 20;
+      opacity: 0;
+      transform: translateZ(0) scale(0.95);
+      transition: opacity 0.5s ease, transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+      will-change: opacity, transform;
+      background: rgba(10, 14, 20, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: 12px;
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.85), inset 0 1px 0 rgba(255,255,255,0.12);
+      padding: 12px 14px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .software-showcase-layer.active {
+      opacity: 1;
+      transform: translateZ(35px) scale(1);
+    }
+
+    .software-item-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 3px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .software-item-row:last-child {
+      border-bottom: none;
+    }
+
+    .soft-left-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .soft-icon-box {
+      width: 22px;
+      height: 22px;
+      border-radius: 5px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    .soft-icon-img {
+      max-width: 18px;
+      max-height: 18px;
+      object-fit: contain;
+    }
+
+    .capcut-invert {
+      filter: brightness(0) invert(1);
+    }
+
+    .soft-name {
+      font-size: 11px;
+      font-weight: 700;
+      color: #ffffff;
+      white-space: nowrap;
+    }
+
+    .soft-pill {
+      font-family: 'Space Grotesk', monospace;
+      font-size: 8px;
+      font-weight: 800;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      padding: 2px 6px;
+      border-radius: 10px;
+      flex-shrink: 0;
+    }
+
+    .pill-mastered {
+      background: rgba(34, 197, 94, 0.16);
+      border: 1px solid rgba(34, 197, 94, 0.45);
+      color: #4ade80;
+    }
+
+    .pill-intermediate {
+      background: rgba(59, 130, 246, 0.16);
+      border: 1px solid rgba(59, 130, 246, 0.45);
+      color: #60a5fa;
+    }
+
+    .pill-beginner {
+      background: rgba(234, 179, 8, 0.16);
+      border: 1px solid rgba(234, 179, 8, 0.45);
+      color: #facc15;
+    }
+
+    /* ========================================================
+       STAGE 05: PRODUCTION & CREATIVITY (DISPLAY WALL OVERLAY)
+       ======================================================== */
+    /* ========================================================
+       STAGE 05: PRODUCTION & CREATIVITY (MINIMAL CLEAN BOXES)
+       ======================================================== */
+    .production-creativity-layer {
+      position: absolute;
+      left: 14.0%;
+      top: 14.0%;
+      width: 72.0%;
+      height: 44.0%;
+      z-index: 30;
+      opacity: 0;
+      transform: translateZ(0) scale(0.96);
+      transition: opacity 0.5s ease, transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+      will-change: opacity, transform;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      pointer-events: none;
+    }
+
+    .production-creativity-layer.active {
+      opacity: 1;
+      transform: translateZ(35px) scale(1);
+      pointer-events: auto;
+    }
+
+    .prod-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+      padding-bottom: 10px;
+      margin-bottom: 18px;
+    }
+
+    .prod-title {
+      font-family: 'Inter', sans-serif;
+      font-size: clamp(20px, 2.2vw, 32px);
+      font-weight: 900;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: #ffffff;
+    }
+
+    .prod-sub {
+      font-family: 'Space Grotesk', monospace;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      color: rgba(255,255,255,0.6);
+      text-transform: uppercase;
+    }
+
+    .prod-grid-boxes {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      flex: 1;
+    }
+
+    .prod-clean-box {
+      background: #090c10;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 22px 18px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.85);
+      transition: border-color 0.25s ease, transform 0.25s ease, background 0.25s ease;
+    }
+
+    .prod-clean-box:hover {
+      border-color: rgba(255, 255, 255, 0.65);
+      background: #121822;
+      transform: translateY(-2px);
+    }
+
+    .prod-box-text {
+      font-family: 'Space Grotesk', -apple-system, sans-serif;
+      font-weight: 800;
+      font-size: clamp(12px, 1.1vw, 15px);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #ffffff;
+    }
+
+    /* Bottom Section Link Anchor */
+    .studio-return-pill {
+      position: absolute;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 20px;
+      background: rgba(15, 20, 30, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 20px;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      color: #ffffff;
+      text-decoration: none;
+      backdrop-filter: blur(8px);
+      transition: all 0.25s ease;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .studio-return-pill.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .studio-return-pill:hover {
+      background: rgba(255, 255, 255, 0.15);
+      border-color: #ffffff;
+      transform: translateX(-50%) scale(1.04);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Cinematic Studio Showcase Section -->
+  <section class="studio-showcase-section" id="studio-showcase">
+    
+    <div class="studio-stage-sticky" id="studio-stage">
+      
+      <!-- Persistent HUD Top Bar -->
+      <div class="studio-hud-topbar">
+        <div class="studio-hud-brand">
+          <div class="studio-hud-rec-dot"></div>
+          <span>Kevin Samuel // The Creator's Studio</span>
+        </div>
+        <div class="studio-hud-status">
+          <span id="studio-timecode">00:00:00:00</span>
+          <div class="studio-hud-pill" id="studio-phase-pill">01 // STUDIO REVEAL</div>
+        </div>
+      </div>
+
+      <!-- Main Canvas Container -->
+      <div class="studio-canvas-container">
+        <div class="studio-frame-16-9" id="studio-frame">
+          
+          <!-- Base Clean Studio Environment Image -->
+          <img src="studio_clean_base.png" alt="Kevin Samuel Creative Studio Workstation" class="studio-bg-img" id="studio-bg-img">
+
+          <!-- Darkness Shroud for Stage 01 Fade-in -->
+          <div class="studio-darkness-shroud" id="darkness-shroud"></div>
+          <div class="studio-lighting-vignette"></div>
+
+          <!-- MODEL Typing & Head Anchor -->
+          <div class="model-interaction-anchor" id="model-anchor">
+            <div class="model-head-anchor" id="model-head"></div>
+            <div class="model-keyboard-glow" id="keyboard-glow"></div>
+          </div>
+
+          <!-- STAGE 03: Camera Equipment Layer (Middle-Left Display Wall) -->
+          <div class="camera-equipment-layer" id="camera-layer">
+            
+            <!-- 3D Camera Assembly / Disassembly Stage -->
+            <div class="camera-stage-3d" id="camera-stage-3d">
+              
+              <!-- 1. Fully Assembled Complete Camera -->
+              <div class="cam-assembled-view" id="cam-assembled-view">
+                <img src="studio_cam_assembled_aligned.png" alt="Sony Alpha 6700 Assembled Camera" class="cam-assembled-img" id="cam-assembled-img">
+              </div>
+
+              <!-- 2. Exploded View Mechanism (Full Internal Components & Optics) -->
+              <div class="cam-exploded-view" id="cam-exploded-view">
+                <img src="studio_cam_element.png" alt="Sony Alpha 6700 Exploded Internal Components" class="cam-exploded-img" id="cam-exploded-img">
+              </div>
+
+            </div>
+
+            <!-- Vector Spec Typography Callout -->
+            <div class="camera-spec-callout">
+              <div class="cam-state-badge" id="cam-state-badge">CAMERA ASSEMBLED</div>
+              <span class="cam-brand-tag">CAMERA USED</span>
+              <h2 class="cam-model-title">Sony Alpha 6700</h2>
+              <p class="cam-tagline">Photography &amp; Videography</p>
+              <div class="cam-features-list">
+                <div class="cam-feat-item"><div class="cam-feat-dot"></div><span>26MP APS-C BSI Sensor</span></div>
+                <div class="cam-feat-item"><div class="cam-feat-dot"></div><span>4K 120p All-Intra Video</span></div>
+                <div class="cam-feat-item"><div class="cam-feat-dot"></div><span>Real-time AI AF Tracking</span></div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- STAGE 04: Software Showcase Layer (Right Display Wall) -->
+          <div class="software-showcase-layer" id="software-layer">
+            <!-- 1. CapCut -->
+            <div class="software-item-row">
+              <div class="soft-left-group">
+                <div class="soft-icon-box">
+                  <img src="software_logos/capcut.svg" alt="CapCut" class="soft-icon-img">
+                </div>
+                <span class="soft-name">CapCut</span>
+              </div>
+              <span class="soft-pill pill-mastered">MASTERED</span>
+            </div>
+            <!-- 2. DaVinci Resolve -->
+            <div class="software-item-row">
+              <div class="soft-left-group">
+                <div class="soft-icon-box">
+                  <img src="software_logos/davinci.svg" alt="DaVinci Resolve" class="soft-icon-img">
+                </div>
+                <span class="soft-name">DaVinci Resolve</span>
+              </div>
+              <span class="soft-pill pill-intermediate">INTERMEDIATE</span>
+            </div>
+            <!-- 3. Adobe Lightroom -->
+            <div class="software-item-row">
+              <div class="soft-left-group">
+                <div class="soft-icon-box">
+                  <img src="software_logos/lightroom.svg" alt="Lightroom" class="soft-icon-img">
+                </div>
+                <span class="soft-name">Lightroom</span>
+              </div>
+              <span class="soft-pill pill-mastered">MASTERED</span>
+            </div>
+            <!-- 4. Adobe Photoshop -->
+            <div class="software-item-row">
+              <div class="soft-left-group">
+                <div class="soft-icon-box">
+                  <img src="software_logos/photoshop.svg" alt="Photoshop" class="soft-icon-img">
+                </div>
+                <span class="soft-name">Photoshop</span>
+              </div>
+              <span class="soft-pill pill-intermediate">INTERMEDIATE</span>
+            </div>
+            <!-- 5. Adobe Premiere Pro -->
+            <div class="software-item-row">
+              <div class="soft-left-group">
+                <div class="soft-icon-box">
+                  <img src="software_logos/premiere.svg" alt="Premiere Pro" class="soft-icon-img">
+                </div>
+                <span class="soft-name">Premiere Pro</span>
+              </div>
+              <span class="soft-pill pill-beginner">BEGINNER</span>
+            </div>
+            <!-- 6. Adobe After Effects -->
+            <div class="software-item-row">
+              <div class="soft-left-group">
+                <div class="soft-icon-box">
+                  <img src="software_logos/aftereffects.svg" alt="After Effects" class="soft-icon-img">
+                </div>
+                <span class="soft-name">After Effects</span>
+              </div>
+              <span class="soft-pill pill-beginner">BEGINNER</span>
+            </div>
+          </div>
+
+          <!-- STAGE 05: Production & Creativity Layer (Full Display Wall) -->
+          <div class="production-creativity-layer" id="production-layer">
+            <div class="prod-header">
+              <h2 class="prod-title">Production &amp; Creativity</h2>
+              <span class="prod-sub">Six Cinematic Disciplines</span>
+            </div>
+            <div class="prod-grid-boxes">
+              <div class="prod-clean-box">
+                <span class="prod-box-text">Cinematography</span>
+              </div>
+              <div class="prod-clean-box">
+                <span class="prod-box-text">Video Editing</span>
+              </div>
+              <div class="prod-clean-box">
+                <span class="prod-box-text">Color Grading</span>
+              </div>
+              <div class="prod-clean-box">
+                <span class="prod-box-text">Photography</span>
+              </div>
+              <div class="prod-clean-box">
+                <span class="prod-box-text">Motion Graphics</span>
+              </div>
+              <div class="prod-clean-box">
+                <span class="prod-box-text">Visual Storytelling</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- STAGE 01: Introductory Title Overlay -->
+      <div class="studio-intro-overlay" id="intro-overlay">
+        <div class="studio-intro-badge">FILMMAKER &bull; PHOTOGRAPHER &bull; DIRECTOR</div>
+        <h1 class="studio-intro-title">Inside the Creative Studio</h1>
+        <p class="studio-intro-sub">A Scroll-Controlled Interactive Experience</p>
+        <div class="studio-scroll-cue">
+          <span>Scroll to Enter Studio</span>
+          <div class="studio-mouse-icon">
+            <div class="studio-mouse-wheel"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Navigation Pill Back to Portfolio -->
+      <a href="#about" class="studio-return-pill" id="return-pill">
+        <span>Proceed to About Kevin</span>
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+
+    </div>
+
+  </section>
+
+  <!-- Interactive Scroll Script -->
+  <script>
+    (function(){
+      const section = document.getElementById('studio-showcase');
+      const frame = document.getElementById('studio-frame');
+      const shroud = document.getElementById('darkness-shroud');
+      const introOverlay = document.getElementById('intro-overlay');
+      const modelAnchor = document.getElementById('model-anchor');
+      const modelHead = document.getElementById('model-head');
+      const keyboardGlow = document.getElementById('keyboard-glow');
+      const cameraLayer = document.getElementById('camera-layer');
+      const softwareLayer = document.getElementById('software-layer');
+      const productionLayer = document.getElementById('production-layer');
+      const timecodeEl = document.getElementById('studio-timecode');
+      const phasePill = document.getElementById('studio-phase-pill');
+      const returnPill = document.getElementById('return-pill');
+
+      const assembledView = document.getElementById('cam-assembled-view');
+      const explodedView = document.getElementById('cam-exploded-view');
+      const badgeEl = document.getElementById('cam-state-badge');
+
+      function updateStudio(p) {
+        // Pseudo timecode calculation
+        const totalFrames = Math.floor(p * 2400);
+        const hrs = String(Math.floor(totalFrames / 86400)).padStart(2, '0');
+        const mins = String(Math.floor((totalFrames % 86400) / 1440)).padStart(2, '0');
+        const secs = String(Math.floor((totalFrames % 1440) / 24)).padStart(2, '0');
+        const frms = String(totalFrames % 24).padStart(2, '0');
+        if (timecodeEl) timecodeEl.textContent = `${hrs}:${mins}:${secs}:${frms}`;
+
+        /* ========================================================
+           STAGE 01: STUDIO REVEAL (p: 0.00 -> 0.20)
+           ======================================================== */
+        if (p < 0.20) {
+          if (phasePill) phasePill.textContent = '01 // STUDIO REVEAL';
+          const t1 = p / 0.20;
+          if (shroud) shroud.style.opacity = Math.max(0, 1 - t1 * 1.2);
+          if (frame) frame.style.transform = `scale(${1.06 - (t1 * 0.06)})`;
+          if (introOverlay) {
+            introOverlay.style.opacity = Math.max(0, 1 - t1 * 2.2);
+            introOverlay.style.transform = `translateY(${-t1 * 30}px)`;
+          }
+
+          if (keyboardGlow) keyboardGlow.classList.remove('active');
+          if (cameraLayer) cameraLayer.classList.remove('active');
+          if (softwareLayer) softwareLayer.classList.remove('active');
+          if (productionLayer) productionLayer.classList.remove('active');
+          if (returnPill) returnPill.classList.remove('active');
+          if (modelHead) modelHead.style.transform = 'rotate(0deg) translateY(0px)';
+          if (modelAnchor) modelAnchor.style.transform = 'translateY(0px)';
+        }
+
+        /* ========================================================
+           STAGE 02: MODEL WORKING (p: 0.20 -> 0.40)
+           ======================================================== */
+        else if (p >= 0.20 && p < 0.40) {
+          if (phasePill) phasePill.textContent = '02 // MODEL WORKING';
+          if (shroud) shroud.style.opacity = '0';
+          if (introOverlay) introOverlay.style.opacity = '0';
+          if (frame) frame.style.transform = 'scale(1.0)';
+
+          const t2 = (p - 0.20) / 0.20;
+          if (keyboardGlow) keyboardGlow.classList.add('active');
+
+          const typingOffset = Math.sin(t2 * Math.PI * 8) * 1.5;
+          const typingRotate = Math.sin(t2 * Math.PI * 4) * 0.8;
+          if (modelAnchor) modelAnchor.style.transform = `translateY(${typingOffset}px)`;
+          if (modelHead) modelHead.style.transform = `translateY(${3 + typingOffset * 0.5}px) rotate(${typingRotate}deg)`;
+
+          if (cameraLayer) cameraLayer.classList.remove('active');
+          if (softwareLayer) softwareLayer.classList.remove('active');
+          if (productionLayer) productionLayer.classList.remove('active');
+          if (returnPill) returnPill.classList.remove('active');
+        }
+
+        /* ========================================================
+           STAGE 03: CAMERA DISASSEMBLY & REASSEMBLY ANIMATION (p: 0.40 -> 0.65)
+           ======================================================== */
+        else if (p >= 0.40 && p < 0.65) {
+          if (shroud) shroud.style.opacity = '0';
+          if (introOverlay) introOverlay.style.opacity = '0';
+          if (keyboardGlow) keyboardGlow.classList.remove('active');
+          if (softwareLayer) softwareLayer.classList.remove('active');
+          if (productionLayer) productionLayer.classList.remove('active');
+          if (returnPill) returnPill.classList.remove('active');
+          if (cameraLayer) cameraLayer.classList.add('active');
+
+          const t3 = (p - 0.40) / 0.25; // 0.0 -> 1.0 within Stage 03
+
+          // Head turns toward camera display area
+          const headTurn = -Math.sin(t3 * Math.PI) * 14;
+          const headRise = -Math.sin(t3 * Math.PI) * 4;
+          if (modelHead) modelHead.style.transform = `translateY(${headRise}px) rotate(${headTurn}deg)`;
+          if (modelAnchor) modelAnchor.style.transform = 'translateY(0px)';
+
+          // Subtle frame pan to frame camera
+          const panX = Math.sin(t3 * Math.PI) * 15;
+          if (frame) frame.style.transform = `scale(1.02) translateX(${panX}px)`;
+
+          // Continuous Disassembly & Reassembly Curve:
+          // t3: 0.00 -> 0.12 : Starts fully assembled
+          // t3: 0.12 -> 0.45 : Disassembling (exploding into components)
+          // t3: 0.45 -> 0.55 : Peak exploded view (all components suspended in 3D)
+          // t3: 0.55 -> 0.88 : Reassembling (components smoothly return into body)
+          // t3: 0.88 -> 1.00 : Locks back into fully assembled camera
+          let factor = 0;
+          if (t3 < 0.12) {
+            factor = 0;
+            if (phasePill) phasePill.textContent = '03 // CAMERA ASSEMBLED';
+            if (badgeEl) badgeEl.textContent = '01 // COMPLETE CAMERA';
+          } else if (t3 < 0.45) {
+            factor = (t3 - 0.12) / 0.33;
+            if (phasePill) phasePill.textContent = '03 // DISASSEMBLY SEQUENCE';
+            if (badgeEl) badgeEl.textContent = '02 // DISASSEMBLING';
+          } else if (t3 <= 0.55) {
+            factor = 1.0;
+            if (phasePill) phasePill.textContent = '03 // CAMERA EXPLODED VIEW';
+            if (badgeEl) badgeEl.textContent = '03 // EXPLODED ARCHITECTURE';
+          } else if (t3 < 0.88) {
+            factor = 1.0 - ((t3 - 0.55) / 0.33);
+            if (phasePill) phasePill.textContent = '03 // REASSEMBLY SEQUENCE';
+            if (badgeEl) badgeEl.textContent = '04 // REASSEMBLING';
+          } else {
+            factor = 0;
+            if (phasePill) phasePill.textContent = '03 // CAMERA REASSEMBLED';
+            if (badgeEl) badgeEl.textContent = '05 // COMPLETE CAMERA';
+          }
+
+          const f = Math.max(0, Math.min(1, factor));
+          // Sinusoidal ease
+          const ease = 0.5 - 0.5 * Math.cos(f * Math.PI);
+
+          // Assembled camera view
+          if (assembledView) {
+            const assemOpacity = Math.max(0, 1 - ease * 2.5);
+            assembledView.style.opacity = assemOpacity.toFixed(3);
+            const assemX = -ease * 35;
+            const assemZ = ease * 30;
+            const assemRotY = -ease * 5;
+            assembledView.style.transform = `translate3d(${assemX.toFixed(1)}px, 0px, ${assemZ.toFixed(1)}px) rotateY(${assemRotY.toFixed(1)}deg)`;
+          }
+
+          // Exploded camera view
+          if (explodedView) {
+            const expOpacity = Math.min(1, ease * 2.2);
+            explodedView.style.opacity = expOpacity.toFixed(3);
+            const scale = 0.90 + ease * 0.10;
+            const expZ = (1 - ease) * -40 + ease * 25;
+            explodedView.style.transform = `translate3d(0px, 0px, ${expZ.toFixed(1)}px) scale(${scale.toFixed(3)})`;
+          }
+        }
+
+        /* ========================================================
+           STAGE 04: SOFTWARE SHOWCASE (p: 0.65 -> 0.82)
+           ======================================================== */
+        else if (p >= 0.65 && p < 0.82) {
+          if (phasePill) phasePill.textContent = '04 // SOFTWARE & PROFICIENCY';
+          if (shroud) shroud.style.opacity = '0';
+          if (introOverlay) introOverlay.style.opacity = '0';
+          if (keyboardGlow) keyboardGlow.classList.remove('active');
+
+          const t4 = (p - 0.65) / 0.17;
+          const headTurn = 15 * Math.sin(t4 * Math.PI);
+          if (modelHead) modelHead.style.transform = `translateY(-2px) rotate(${headTurn}deg)`;
+          if (modelAnchor) modelAnchor.style.transform = 'translateY(0px)';
+
+          if (cameraLayer) cameraLayer.classList.remove('active');
+          if (softwareLayer) softwareLayer.classList.add('active');
+          if (productionLayer) productionLayer.classList.remove('active');
+          if (returnPill) returnPill.classList.remove('active');
+
+          const panX = -t4 * 12;
+          if (frame) frame.style.transform = `scale(1.02) translateX(${panX}px)`;
+        }
+
+        /* ========================================================
+           STAGE 05: PRODUCTION & CREATIVITY (p: 0.82 -> 1.00)
+           ======================================================== */
+        else {
+          if (phasePill) phasePill.textContent = '05 // PRODUCTION & CREATIVITY';
+          if (shroud) shroud.style.opacity = '0';
+          if (introOverlay) introOverlay.style.opacity = '0';
+          if (keyboardGlow) keyboardGlow.classList.remove('active');
+
+          if (modelHead) modelHead.style.transform = 'translateY(0px) rotate(0deg)';
+          if (modelAnchor) modelAnchor.style.transform = 'translateY(0px)';
+
+          if (cameraLayer) cameraLayer.classList.remove('active');
+          if (softwareLayer) softwareLayer.classList.remove('active');
+          if (productionLayer) productionLayer.classList.add('active');
+          if (returnPill) returnPill.classList.add('active');
+
+          if (frame) frame.style.transform = 'scale(1.0) translateX(0px)';
+        }
+      }
+
+      // Scroll listener with RAF throttling
+      let ticking = false;
+      function onScroll() {
+        if (!ticking) {
+          requestAnimationFrame(() => {
+            const rect = section.getBoundingClientRect();
+            const total = rect.height - window.innerHeight;
+            const progress = Math.max(0, Math.min(1, -rect.top / total));
+            updateStudio(progress);
+            ticking = false;
+          });
+          ticking = true;
+        }
+      }
+
+      window.addEventListener('scroll', onScroll, { passive: true });
+      window.addEventListener('resize', onScroll, { passive: true });
+      window.__updateStudioProgress = updateStudio;
+      updateStudio(0);
+    })();
+  </script>
+</body>
+</html>

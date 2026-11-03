@@ -1,0 +1,28 @@
+# Development, test scripts and temporary test profiles
+scripts/
+*.py
+*.log
+scratch_*
+test_output/
+temp_thumbs/
+sample_frames/
+
+# Backups and previous working iterations
+*backup*.html
+first 3 good.html
+scratch_*.html
+scratch_*.txt
+
+# Temporary test captures in root
+check_*.jpg
+check_*.png
+gallery_settled_check.png
+
+# System & IDE files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Large test video in root (the official optimized one is in public/finalize.mp4)
+/finalize/
